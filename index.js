@@ -146,7 +146,7 @@ class UI {
     total = cart.reduce((acc, curr) => {
       return acc + curr.price * curr.amount;
     }, 0);
-    cartTotal.innerText = total;
+    cartTotal.innerText = total.toFixed(2);
   }
 
   cartLogic() {
