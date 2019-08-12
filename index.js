@@ -94,10 +94,15 @@ class UI {
         e.target.innerText = "In Cart";
         e.target.disabled = true;
         // // Add Item to Cart in Storage
-        let cartItem = { ...Storage.getProduct(id), amount: 1 };
+        let cartItem = {
+          ...Storage.getProduct(id),
+          amount: 1,
+          singleTotalPrice: Storage.getProduct(id).price
+        };
+
         cart = [...cart, cartItem];
         Storage.saveCart(cart);
-        //Add Selected Content to DOM
+        //Add Single Item  to DOM
         this.addCartContent(cartItem);
         // Set cart Value
         this.setCartValues(cart);
@@ -160,23 +165,32 @@ class UI {
         let cartQty = e.target.nextElementSibling;
         let id = e.target.dataset.id;
         let increase = cart.find(item => item.id == id);
-        console.log(increase);
         increase.amount = increase.amount + 1;
+        increase.singleTotalPrice = increase.singleTotalPrice + increase.price;
         this.setCartValues(cart);
         Storage.saveCart(cart);
+        // Show all item increase total
         cartQty.innerText = increase.amount;
+        // Show single Item increase total
+        e.target.parentElement.previousElementSibling.children[1].innerText =
+          increase.singleTotalPrice;
       } else if (e.target.classList.contains("fa-chevron-down")) {
         let cartQty = e.target.previousElementSibling;
         let id = e.target.dataset.id;
         let decrease = cart.find(item => item.id == id);
         decrease.amount = decrease.amount - 1;
+        decrease.singleTotalPrice = decrease.singleTotalPrice - decrease.price;
         if (decrease.amount === 0) {
           cartContent.removeChild(cartQty.parentElement.parentElement);
           this.removeOne(id);
         }
         this.setCartValues(cart);
         Storage.saveCart(cart);
+        // Show all item decrease total
         cartQty.innerText = decrease.amount;
+        // Show single Item decrease total
+        e.target.parentElement.previousElementSibling.children[1].innerText =
+          decrease.singleTotalPrice;
       }
     });
   }
@@ -202,7 +216,7 @@ class UI {
     div.innerHTML = `<img src=${item.image} alt="product" />
             <div>
               <h4>${item.title}</h4>
-              <h5 class="item-price">$${item.price}</h5>
+              <h5 class="item-price">$${item.singleTotalPrice}</h5>
               <span class="remove-item" data-id=${item.id}>remove</span>
             </div>
             <div>
@@ -249,8 +263,6 @@ document.addEventListener("DOMContentLoaded", () => {
   products
     .getProducts()
     .then(products => {
-      console.log(products);
-
       ui.displayProducts(products);
       Storage.saveProducts(products);
     })
