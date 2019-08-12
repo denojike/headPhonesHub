@@ -172,8 +172,9 @@ class UI {
         // Show all item increase total
         cartQty.innerText = increase.amount;
         // Show single Item increase total
-        e.target.parentElement.previousElementSibling.children[1].innerText =
-          increase.singleTotalPrice;
+        e.target.parentElement.previousElementSibling.children[1].innerText = parseFloat(
+          increase.singleTotalPrice
+        ).toFixed(2);
       } else if (e.target.classList.contains("fa-chevron-down")) {
         let cartQty = e.target.previousElementSibling;
         let id = e.target.dataset.id;
@@ -189,8 +190,9 @@ class UI {
         // Show all item decrease total
         cartQty.innerText = decrease.amount;
         // Show single Item decrease total
-        e.target.parentElement.previousElementSibling.children[1].innerText =
-          decrease.singleTotalPrice;
+        e.target.parentElement.previousElementSibling.children[1].innerText = parseFloat(
+          decrease.singleTotalPrice
+        ).toFixed(2);
       }
     });
   }
